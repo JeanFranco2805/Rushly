@@ -1,0 +1,13 @@
+.main {
+  flex: 1;
+  animation: fadeIn var(--transition-base) forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

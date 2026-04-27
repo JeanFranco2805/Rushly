@@ -1,0 +1,147 @@
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  z-index: 200;
+  animation: fadeIn 200ms ease;
+}
+
+.drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 420px;
+  max-width: 100vw;
+  background: var(--color-bg-elevated);
+  border-left: 1px solid var(--color-border);
+  z-index: 201;
+  display: flex;
+  flex-direction: column;
+  transform: translateX(100%);
+  transition: transform 350ms cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform;
+}
+
+.open {
+  transform: translateX(0);
+}
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: var(--space-6);
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: var(--font-semibold);
+}
+
+.count {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  display: block;
+  margin-top: var(--space-1);
+}
+
+.closeButton {
+  color: var(--color-text-secondary);
+  padding: var(--space-1);
+  border-radius: var(--radius-sm);
+  transition: color var(--transition-fast), background var(--transition-fast);
+  cursor: pointer;
+  margin-top: 2px;
+}
+
+.closeButton:hover {
+  color: var(--color-text-primary);
+  background: var(--color-bg-surface);
+}
+
+.body {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--space-4);
+}
+
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-16) var(--space-8);
+  text-align: center;
+  gap: var(--space-2);
+}
+
+.emptyTitle {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  color: var(--color-text-secondary);
+}
+
+.emptyHint {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-4);
+}
+
+.items {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.footer {
+  padding: var(--space-6);
+  border-top: 1px solid var(--color-border-subtle);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.subtotalLabel {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+}
+
+.subtotalValue {
+  font-size: var(--text-xl);
+  font-weight: var(--font-semibold);
+  color: var(--color-text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.clearButton {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  text-align: center;
+  padding: var(--space-2);
+  transition: color var(--transition-fast);
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+}
+
+.clearButton:hover {
+  color: var(--color-error);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

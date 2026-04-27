@@ -1,0 +1,229 @@
+.page {
+  display: flex;
+  flex-direction: column;
+}
+
+.hero {
+  min-height: calc(90vh - var(--header-height));
+  display: flex;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  padding: var(--space-20) var(--space-6);
+  max-width: var(--container-xl);
+  margin-inline: auto;
+  width: 100%;
+}
+
+.heroContent {
+  max-width: 640px;
+  position: relative;
+  z-index: 1;
+  animation: heroFadeIn 600ms ease both;
+}
+
+.heroEyebrow {
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  color: var(--color-accent);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: var(--space-4);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.heroEyebrow::before {
+  content: "";
+  width: 24px;
+  height: 2px;
+  background: var(--color-accent);
+  border-radius: var(--radius-full);
+  display: inline-block;
+}
+
+.heroTitle {
+  font-family: var(--font-display);
+  font-size: clamp(var(--text-4xl), 6vw, var(--text-6xl));
+  font-weight: var(--font-semibold);
+  line-height: var(--leading-tight);
+  color: var(--color-text-primary);
+  margin-bottom: var(--space-6);
+}
+
+.heroTitle em {
+  font-style: italic;
+  color: var(--color-accent);
+}
+
+.heroDescription {
+  font-size: var(--text-lg);
+  color: var(--color-text-secondary);
+  line-height: var(--leading-relaxed);
+  margin-bottom: var(--space-10);
+  max-width: 480px;
+}
+
+.heroActions {
+  display: flex;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+.heroDecoration {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.decorCircle {
+  width: 480px;
+  height: 480px;
+  border-radius: 50%;
+  border: 1px solid var(--color-border-subtle);
+  position: absolute;
+  right: -160px;
+  top: -240px;
+}
+
+.decorDot {
+  width: 320px;
+  height: 320px;
+  border-radius: 50%;
+  border: 1px solid var(--color-border-subtle);
+  position: absolute;
+  right: -60px;
+  top: -160px;
+}
+
+.decorLine {
+  position: absolute;
+  right: 120px;
+  top: 0;
+  width: 1px;
+  height: 400px;
+  background: linear-gradient(to bottom, transparent, var(--color-border-subtle), transparent);
+}
+
+.section {
+  padding-block: var(--space-20);
+  border-top: 1px solid var(--color-border-subtle);
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: var(--space-8);
+}
+
+.sectionTitle {
+  font-family: var(--font-display);
+  font-size: var(--text-3xl);
+  font-weight: var(--font-semibold);
+}
+
+.sectionLink {
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  color: var(--color-accent);
+  transition: opacity var(--transition-fast);
+}
+
+.sectionLink:hover {
+  opacity: 0.7;
+}
+
+.productGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-5);
+}
+
+.features {
+  padding-block: var(--space-20);
+  border-top: 1px solid var(--color-border-subtle);
+  background: var(--color-bg-elevated);
+}
+
+.featuresGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-8);
+}
+
+.feature {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.featureIcon {
+  color: var(--color-accent);
+  display: flex;
+  width: 40px;
+  height: 40px;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-accent-muted);
+  border-radius: var(--radius-md);
+}
+
+.featureTitle {
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  font-weight: var(--font-semibold);
+  color: var(--color-text-primary);
+}
+
+.featureDesc {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  line-height: var(--leading-relaxed);
+}
+
+@keyframes heroFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 1024px) {
+  .productGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .featuresGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .hero {
+    min-height: auto;
+    padding-block: var(--space-16);
+  }
+
+  .heroActions {
+    flex-direction: column;
+  }
+
+  .decorCircle,
+  .decorDot,
+  .decorLine {
+    display: none;
+  }
+
+  .productGrid,
+  .featuresGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
