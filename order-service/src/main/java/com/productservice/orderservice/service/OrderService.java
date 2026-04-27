@@ -2,6 +2,8 @@ package com.productservice.orderservice.service;
 
 import com.productservice.orderservice.mapper.OrderMapper;
 import com.productservice.orderservice.model.OrderDTO;
+import com.productservice.orderservice.model.OrderItemDTO;
+import com.productservice.orderservice.repository.OrderItemRepository;
 import com.productservice.orderservice.repository.OrderRepository;
 import org.springframework.stereotype.Service;
 
@@ -9,52 +11,87 @@ import org.springframework.stereotype.Service;
 public class OrderService {
     private final OrderRepository orderRepository;
     private final OrderMapper orderMapper;
+    private final OrderItemRepository orderItemRepository;
 
-    public OrderService(OrderRepository orderRepository, OrderMapper orderMapper) {
+
+    public OrderService(OrderRepository orderRepository, OrderMapper orderMapper, OrderItemRepository orderItemRepository) {
         this.orderRepository = orderRepository;
         this.orderMapper = orderMapper;
+        this.orderItemRepository = orderItemRepository;
     }
+
+    public void saveOrderItem(OrderItemDTO orderItemDTO) {
+        orderItemRepository.save(orderMapper.toOrderItemEntity(orderItemDTO));
+    }
+
+    public void deleteOrderItem(Long id) {
+        orderItemRepository.deleteById(id);
+    }
+
+    public void deleteAllOrderItems() {
+        orderItemRepository.deleteAll();
+    }
+
+    public Iterable<OrderItemDTO> findAllOrderItems() {
+        return orderItemRepository.findAll().stream().map(orderMapper::toOrderItemDTO).toList();
+    }
+
+    public OrderItemDTO findOrderItemById(Long id) {
+        return orderMapper.toOrderItemDTO(orderItemRepository.findById(id).orElseThrow());
+    }
+
+    public void updateOrderItem(OrderItemDTO orderItemDTO) {
+        orderItemRepository.save(orderMapper.toOrderItemEntity(orderItemDTO));
+    }
+
+    public void updateOrderItemQuantity(Long id, int quantity) {
+        orderItemRepository.findById(id).ifPresent(orderItem -> orderItem.setQuantity(quantity));
+    }
+
+    public void updateOrderItemPrice(Long id, double price) {
+        orderItemRepository.findById(id).ifPresent(orderItem -> orderItem.setPrice(price));
+    }
+
 
     public void save(OrderDTO orderDTO) {
         orderRepository.save(orderMapper.toEntity(orderDTO));
     }
 
-    public void deleteAll(){
+    public void deleteAll() {
         orderRepository.deleteAll();
     }
 
-    public void deleteById(Long id){
+    public void deleteById(Long id) {
         orderRepository.deleteById(id);
     }
 
-    public void deleteByUserId(Long userId){
+    public void deleteByUserId(Long userId) {
         orderRepository.deleteAll(orderRepository.findAll().stream().filter(order -> order.getUserId().equals(userId)).toList());
     }
 
-    public OrderDTO findById(Long id){
+    public OrderDTO findById(Long id) {
         return orderMapper.toDTO(orderRepository.findById(id).orElseThrow());
     }
 
-    public OrderDTO findByUserId(Long userId){
+    public OrderDTO findByUserId(Long userId) {
         return orderMapper.toDTO(orderRepository.findAll().stream().filter(order -> order.getUserId().equals(userId)).findFirst().orElseThrow());
     }
 
-    public void updateOrder(OrderDTO orderDTO){
+    public void updateOrder(OrderDTO orderDTO) {
         orderRepository.save(orderMapper.toEntity(orderDTO));
     }
 
-    public void updateStatus(Long id, String status){
+    public void updateStatus(Long id, String status) {
         orderRepository.findById(id).ifPresent(order -> order.setStatus(status));
     }
 
-    public void updatePrice(Long id, Double price){
+    public void updatePrice(Long id, Double price) {
         orderRepository.findById(id).ifPresent(order -> order.setPrice(price));
     }
 
-    public void updateTotalAmount(Long id, Double totalAmount){
+    public void updateTotalAmount(Long id, Double totalAmount) {
         orderRepository.findById(id).ifPresent(order -> order.setTotalAmount(totalAmount));
     }
-
 
 
 }

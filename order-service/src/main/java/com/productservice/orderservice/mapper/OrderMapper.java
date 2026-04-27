@@ -2,6 +2,8 @@ package com.productservice.orderservice.mapper;
 
 import com.productservice.orderservice.model.Order;
 import com.productservice.orderservice.model.OrderDTO;
+import com.productservice.orderservice.model.OrderItem;
+import com.productservice.orderservice.model.OrderItemDTO;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -28,4 +30,23 @@ public class OrderMapper {
         order.setOrderDate(orderDTO.orderDate());
         return order;
     }
+
+    public OrderItemDTO toOrderItemDTO(OrderItem orderItem) {
+        return new OrderItemDTO(
+                orderItem.getId(),
+                orderItem.getProductId(),
+                orderItem.getQuantity(),
+                orderItem.getPrice()
+        );
+    }
+
+    public OrderItem toOrderItemEntity(OrderItemDTO orderItemDTO) {
+        OrderItem orderItem = new OrderItem();
+        orderItem.setId(orderItemDTO.id());
+        orderItem.setProductId(orderItemDTO.productId());
+        orderItem.setQuantity(orderItemDTO.quantity());
+        orderItem.setPrice(orderItemDTO.price());
+        return orderItem;
+    }
+
 }
