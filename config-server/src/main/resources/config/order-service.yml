@@ -1,0 +1,17 @@
+server:
+  port: 8040
+  eureka:
+    client:
+      service-url:
+        defaultZone: http://localhost:8761/eureka/
+      http-client:
+        type: java
+        connection-timeout: 5000
+        read-timeout: 5000
+        max-connections: 100
+        max-connections-per-host: 50
+
+spring:
+  cloud:
+    discovery:
+      enabled: true
