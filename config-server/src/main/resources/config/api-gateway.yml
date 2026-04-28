@@ -28,6 +28,11 @@ spring:
           predicates:
             - Path=/orders/**
             - Path=/order/**
+        - id: notification-service
+          uri: lb://notification-service
+          predicates:
+            - Path=/notifications/**
+            - Path=/notification/**
 server:
   port: 8070
 
