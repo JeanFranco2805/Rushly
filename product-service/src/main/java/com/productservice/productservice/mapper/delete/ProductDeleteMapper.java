@@ -6,12 +6,14 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ProductDeleteMapper {
-    public Product toEntity(ProductRequestDelete productRequestDelete) {
+
+    public Product toEntity(ProductRequestDelete dto) {
         Product product = new Product();
-        product.setId(productRequestDelete.id());
-        product.setName(productRequestDelete.name());
+        product.setId(dto.id());
+        product.setName(dto.name());
         return product;
     }
+
     public ProductRequestDelete toDTO(Product product) {
         return new ProductRequestDelete(product.getId(), product.getName());
     }

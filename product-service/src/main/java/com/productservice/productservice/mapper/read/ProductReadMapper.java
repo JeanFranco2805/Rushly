@@ -9,42 +9,44 @@ import java.util.List;
 
 @Component
 public class ProductReadMapper {
-    public Product toEntity(ProductRequestRead productRequestRead) {
-        Product product = new Product();
-        product.setId(productRequestRead.id());
-        product.setName(productRequestRead.name());
-        product.setBrand(productRequestRead.brand());
-        return product;
-    }
-
-    public ProductRequestRead toDTO(Product product) {
-        ProductRequestRead read = new ProductRequestRead(
-                product.getId(),
-                product.getName(),
-                product.getBrand(),
-                product.getCategory().getName()
-        );
-        return read;
-    }
 
     public ProductResponse toResponse(Product product) {
-        ProductResponse response = new ProductResponse(
+        return new ProductResponse(
                 product.getName(),
                 product.getDescription(),
-                product.getCategory().getName(),
+                product.getCategory() != null ? product.getCategory().getName() : null,
                 product.getBrand(),
                 product.getPrice(),
                 product.getImageUrl(),
-                product.getId()
+                product.getId(),
+                product.getStoreId(),
+                product.getStock(),
+                product.isActive()
         );
-        return response;
+    }
+
+    public ProductRequestRead toDTO(Product product) {
+        return new ProductRequestRead(
+                product.getId(),
+                product.getName(),
+                product.getBrand(),
+                product.getCategory() != null ? product.getCategory().getName() : null
+        );
+    }
+
+    public Product toEntity(ProductRequestRead dto) {
+        Product product = new Product();
+        product.setId(dto.id());
+        product.setName(dto.name());
+        product.setBrand(dto.brand());
+        return product;
+    }
+
+    public List<ProductResponse> toResponseList(List<Product> products) {
+        return products.stream().map(this::toResponse).toList();
     }
 
     public List<ProductRequestRead> toDTOList(List<Product> products) {
         return products.stream().map(this::toDTO).toList();
     }
-    public List<Product> toEntityList(List<ProductRequestRead> productsDTO) {
-        return productsDTO.stream().map(this::toEntity).toList();
-    }
-
 }

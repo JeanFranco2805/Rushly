@@ -4,7 +4,8 @@ public record OrderItemDTO(
         Long id,
         String productId,
         int quantity,
-        double price
+        double price,
+        Long orderId
 ) {
     @Override
     public Long id() {
@@ -24,5 +25,10 @@ public record OrderItemDTO(
     @Override
     public double price() {
         return price;
+    }
+
+    @Override
+    public Long orderId() {
+        return orderId;
     }
 }

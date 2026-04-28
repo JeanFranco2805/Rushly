@@ -5,10 +5,12 @@ import java.time.LocalDateTime;
 public record OrderDTO(
         Long id,
         Long userId,
+        Long storeId,
         double totalAmount,
         double price,
         String status,
-        LocalDateTime orderDate
+        LocalDateTime orderDate,
+        String paymentMethod
 ) {
     @Override
     public Long id() {
@@ -18,6 +20,11 @@ public record OrderDTO(
     @Override
     public Long userId() {
         return userId;
+    }
+
+    @Override
+    public Long storeId() {
+        return storeId;
     }
 
     @Override
@@ -38,5 +45,10 @@ public record OrderDTO(
     @Override
     public LocalDateTime orderDate() {
         return orderDate;
+    }
+
+    @Override
+    public String paymentMethod() {
+        return paymentMethod;
     }
 }

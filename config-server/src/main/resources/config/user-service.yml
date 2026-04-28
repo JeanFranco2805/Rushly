@@ -2,9 +2,9 @@ eureka:
   client:
     service-url:
       defaultZone: http://localhost:8761/eureka/
-
     http-client:
       type: java
+
 spring:
   cloud:
     discovery:
@@ -27,3 +27,6 @@ spring:
   sql:
     init:
       mode: always
+
+server:
+  port: 8080

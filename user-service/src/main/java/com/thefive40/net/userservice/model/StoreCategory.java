@@ -1,0 +1,19 @@
+package com.thefive40.net.userservice.model;
+
+public enum StoreCategory {
+    FOOD_AND_BEVERAGES,
+    ELECTRONICS,
+    CLOTHING_AND_FASHION,
+    HEALTH_AND_BEAUTY,
+    HOME_AND_GARDEN,
+    SPORTS_AND_OUTDOORS,
+    BOOKS_AND_STATIONERY,
+    TOYS_AND_GAMES,
+    AUTOMOTIVE,
+    PET_SUPPLIES,
+    GROCERY,
+    PHARMACY,
+    JEWELRY_AND_ACCESSORIES,
+    ARTS_AND_CRAFTS,
+    OTHER
+}

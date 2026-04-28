@@ -3,86 +3,141 @@ package com.productservice.orderservice.controller;
 import com.productservice.orderservice.model.OrderDTO;
 import com.productservice.orderservice.model.OrderItemDTO;
 import com.productservice.orderservice.service.OrderService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/order")
 public class OrderController {
+
     private final OrderService orderService;
 
     public OrderController(OrderService orderService) {
         this.orderService = orderService;
     }
 
+    // ── PEDIDOS ───────────────────────────────────────────────────────────────
+
     @PostMapping("/save")
-    public void saveOrder(@RequestBody OrderDTO orderDTO) {
-        orderService.save(orderDTO);
-    }
-
-    @DeleteMapping("/deleteAll")
-    public void deleteAll() {
-        orderService.deleteAll();
-    }
-
-    @DeleteMapping("/deleteById/{id}")
-    public void deleteById(@PathVariable Long id) {
-        orderService.deleteById(id);
-    }
-
-    @DeleteMapping("/deleteByUserId/{userId}")
-    public void deleteByUserId(@PathVariable Long userId) {
-        orderService.deleteByUserId(userId);
+    public ResponseEntity<OrderDTO> save(@RequestBody OrderDTO dto) {
+        return ResponseEntity.ok(orderService.save(dto));
     }
 
     @GetMapping("/findById/{id}")
-    public OrderDTO findById(@PathVariable Long id) {
-        return orderService.findById(id);
+    public ResponseEntity<OrderDTO> findById(@PathVariable Long id) {
+        return ResponseEntity.ok(orderService.findById(id));
     }
 
+    /** Todos los pedidos de un usuario */
     @GetMapping("/findByUserId/{userId}")
-    public OrderDTO findByUserId(@PathVariable Long userId) {
-        return orderService.findByUserId(userId);
+    public ResponseEntity<List<OrderDTO>> findByUserId(@PathVariable Long userId) {
+        return ResponseEntity.ok(orderService.findByUserId(userId));
+    }
+
+    /** Todos los pedidos que recibe una tienda */
+    @GetMapping("/findByStoreId/{storeId}")
+    public ResponseEntity<List<OrderDTO>> findByStoreId(@PathVariable Long storeId) {
+        return ResponseEntity.ok(orderService.findByStoreId(storeId));
+    }
+
+    /** Pedidos de un usuario filtrados por estado */
+    @GetMapping("/findByUserIdAndStatus/{userId}")
+    public ResponseEntity<List<OrderDTO>> findByUserIdAndStatus(
+            @PathVariable Long userId,
+            @RequestParam String status) {
+        return ResponseEntity.ok(orderService.findByUserIdAndStatus(userId, status));
+    }
+
+    /** Pedidos de una tienda filtrados por estado */
+    @GetMapping("/findByStoreIdAndStatus/{storeId}")
+    public ResponseEntity<List<OrderDTO>> findByStoreIdAndStatus(
+            @PathVariable Long storeId,
+            @RequestParam String status) {
+        return ResponseEntity.ok(orderService.findByStoreIdAndStatus(storeId, status));
     }
 
     @PutMapping("/update")
-    public void updateOrder(@RequestBody OrderDTO orderDTO) {
-        orderService.updateOrder(orderDTO);
+    public ResponseEntity<Void> update(@RequestBody OrderDTO dto) {
+        orderService.updateOrder(dto);
+        return ResponseEntity.ok().build();
     }
 
     @PutMapping("/updateStatus/{id}")
-    public void updateStatus(@PathVariable Long id, @RequestParam String status) {
+    public ResponseEntity<Void> updateStatus(
+            @PathVariable Long id,
+            @RequestParam String status) {
         orderService.updateStatus(id, status);
+        return ResponseEntity.ok().build();
     }
 
     @PutMapping("/updatePrice/{id}")
-    public void updatePrice(@PathVariable Long id, @RequestParam Double price) {
+    public ResponseEntity<Void> updatePrice(
+            @PathVariable Long id,
+            @RequestParam double price) {
         orderService.updatePrice(id, price);
+        return ResponseEntity.ok().build();
     }
 
     @PutMapping("/updateTotalAmount/{id}")
-    public void updateTotalAmount(@PathVariable Long id, @RequestParam Double totalAmount) {
+    public ResponseEntity<Void> updateTotalAmount(
+            @PathVariable Long id,
+            @RequestParam double totalAmount) {
         orderService.updateTotalAmount(id, totalAmount);
+        return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/updateOrderItemPrice/{id}")
-    public void updateOrderItemPrice(@PathVariable Long id, @RequestParam Double price) {
-        orderService.updateOrderItemPrice(id, price);
+    @DeleteMapping("/deleteById/{id}")
+    public ResponseEntity<Void> deleteById(@PathVariable Long id) {
+        orderService.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
+
+    @DeleteMapping("/deleteByUserId/{userId}")
+    public ResponseEntity<Void> deleteByUserId(@PathVariable Long userId) {
+        orderService.deleteByUserId(userId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/deleteByStoreId/{storeId}")
+    public ResponseEntity<Void> deleteByStoreId(@PathVariable Long storeId) {
+        orderService.deleteByStoreId(storeId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/deleteAll")
+    public ResponseEntity<Void> deleteAll() {
+        orderService.deleteAll();
+        return ResponseEntity.noContent().build();
+    }
+
+    // ── ÍTEMS ─────────────────────────────────────────────────────────────────
 
     @PostMapping("/saveOrderItem")
-    public void saveOrderItem(@RequestBody OrderItemDTO orderItemDTO) {
-        orderService.saveOrderItem(orderItemDTO);
+    public ResponseEntity<OrderItemDTO> saveOrderItem(@RequestBody OrderItemDTO dto) {
+        return ResponseEntity.ok(orderService.saveOrderItem(dto));
     }
-    @DeleteMapping("/deleteOrderItem/{id}")
-    public void deleteOrderItem(@PathVariable Long id) {
-        orderService.deleteOrderItem(id);
+
+    @GetMapping("/orderItems/{orderId}")
+    public ResponseEntity<List<OrderItemDTO>> getItemsByOrder(@PathVariable Long orderId) {
+        return ResponseEntity.ok(orderService.findOrderItemsByOrderId(orderId));
     }
-    @DeleteMapping("/deleteAllOrderItems")
-    public void deleteAllOrderItems() {
-        orderService.deleteAllOrderItems();
-    }
+
     @GetMapping("/findAllOrderItems")
-    public Iterable<OrderItemDTO> findAllOrderItems() {
-        return orderService.findAllOrderItems();
+    public ResponseEntity<List<OrderItemDTO>> findAllOrderItems() {
+        return ResponseEntity.ok(orderService.findAllOrderItems());
+    }
+
+    @DeleteMapping("/deleteOrderItem/{id}")
+    public ResponseEntity<Void> deleteOrderItem(@PathVariable Long id) {
+        orderService.deleteOrderItem(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/deleteAllOrderItems")
+    public ResponseEntity<Void> deleteAllOrderItems() {
+        orderService.deleteAllOrderItems();
+        return ResponseEntity.noContent().build();
     }
 }

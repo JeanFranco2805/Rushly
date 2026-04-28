@@ -1,14 +1,14 @@
 package com.productservice.productservice.model.update;
 
-import org.springframework.stereotype.Component;
-
-public record ProductRequestUpdate (
-         String id,
-         String name,
-         String description,
-         double price,
-         String imageUrl
-){
+public record ProductRequestUpdate(
+        String id,
+        String name,
+        String description,
+        double price,
+        String imageUrl,
+        int stock,
+        boolean active
+) {
     @Override
     public String id() {
         return id;
@@ -32,5 +32,15 @@ public record ProductRequestUpdate (
     @Override
     public String imageUrl() {
         return imageUrl;
+    }
+
+    @Override
+    public int stock() {
+        return stock;
+    }
+
+    @Override
+    public boolean active() {
+        return active;
     }
 }

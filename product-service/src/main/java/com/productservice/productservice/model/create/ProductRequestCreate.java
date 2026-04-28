@@ -9,7 +9,10 @@ public record ProductRequestCreate(
         double price,
         String imageUrl,
         Category category,
-        String brand
+        String brand,
+        Long storeId,
+        int stock,
+        boolean active
 ) {
     @Override
     public String id() {
@@ -44,5 +47,20 @@ public record ProductRequestCreate(
     @Override
     public String brand() {
         return brand;
+    }
+
+    @Override
+    public Long storeId() {
+        return storeId;
+    }
+
+    @Override
+    public int stock() {
+        return stock;
+    }
+
+    @Override
+    public boolean active() {
+        return active;
     }
 }

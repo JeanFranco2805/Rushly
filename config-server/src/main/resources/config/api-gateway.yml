@@ -8,31 +8,51 @@ spring:
     discovery:
       enabled: true
     gateway:
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins:
+              - "http://localhost:3000"
+              - "http://localhost:5173"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - PATCH
+              - DELETE
+              - OPTIONS
+            allowedHeaders: "*"
+            allowCredentials: true
       routes:
         - id: user-service
           uri: lb://user-service
           predicates:
             - Path=/users/**
+
+        - id: store-service
+          uri: lb://user-service
+          predicates:
+            - Path=/stores/**
+
         - id: product-service
           uri: lb://product-service
           predicates:
             - Path=/products/**
-            - Path=/product/**
 
         - id: cart-service
           uri: lb://cart-service
           predicates:
             - Path=/carts/**
+
         - id: order-service
           uri: lb://order-service
           predicates:
-            - Path=/orders/**
             - Path=/order/**
+
         - id: notification-service
           uri: lb://notification-service
           predicates:
-            - Path=/notifications/**
             - Path=/notification/**
+
 server:
   port: 8070
-
