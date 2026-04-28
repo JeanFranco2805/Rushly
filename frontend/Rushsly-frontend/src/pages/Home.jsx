@@ -38,10 +38,10 @@ export default function Home() {
                         <input
                             className={styles.heroInput}
                             placeholder="Search stores, products, categories..."
-                            onFocus={() => navigate(ROUTES.STORES)}
+                            onFocus={() => navigate(ROUTES.PRODUCTS)}
                             readOnly
                         />
-                        <button className={styles.heroBtn} onClick={() => navigate(ROUTES.STORES)}>
+                        <button className={styles.heroBtn} onClick={() => navigate(ROUTES.PRODUCTS)}>
                             Explore
                         </button>
                     </div>
@@ -65,7 +65,6 @@ export default function Home() {
                 <div className={styles.heroDecor}>
                     <div className={styles.decorRing1} />
                     <div className={styles.decorRing2} />
-                    <div className={styles.decorGrid} />
                 </div>
             </section>
 
@@ -116,7 +115,7 @@ export default function Home() {
                     ) : displayStores.length === 0 ? (
                         <div className={styles.empty}>
                             <p className={styles.emptyTitle}>No stores in this category yet.</p>
-                            <Link to={ROUTES.SELLER_STORE} className={styles.openStoreBtn}>
+                            <Link to={ROUTES.SELLER} className={styles.openStoreBtn}>
                                 Be the first — open your store
                             </Link>
                         </div>
@@ -140,7 +139,7 @@ export default function Home() {
                                 Join thousands of sellers. Set up your store in minutes, manage inventory,
                                 and reach customers in your city.
                             </p>
-                            <Link to={ROUTES.SELLER_STORE} className={styles.ctaBtn}>
+                            <Link to={ROUTES.SELLER} className={styles.ctaBtn}>
                                 Open your store →
                             </Link>
                         </div>

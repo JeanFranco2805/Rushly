@@ -1,7 +1,7 @@
 import { useParams, Link } from "react-router-dom";
 import { useStore } from "@/hooks/useStores";
 import { useStoreProducts } from "@/hooks/useProducts";
-import { STORE_CATEGORIES, PLACEHOLDER_STORE, PLACEHOLDER_LOGO, ROUTES } from "@/utils/constants";
+import { STORE_CATEGORIES, PLACEHOLDER_BANNER, PLACEHOLDER_LOGO, ROUTES } from "@/utils/constants";
 import ProductCard from "@/components/products/ProductCard";
 import { ProductCardSkeleton, Skeleton } from "@/components/ui/Loader";
 import styles from "./StoreDetail.module.css";
@@ -24,15 +24,16 @@ export default function StoreDetail() {
 
     return (
         <div className={styles.page}>
-            {/* Store banner */}
+            {/* Banner */}
             <div className={styles.banner}>
                 {storeLoading ? (
                     <Skeleton height="220px" />
                 ) : (
                     <img
-                        src={store?.bannerUrl || PLACEHOLDER_STORE}
+                        src={store?.bannerUrl || PLACEHOLDER_BANNER}
                         alt={store?.name}
                         className={styles.bannerImg}
+                        onError={(e) => { e.target.src = PLACEHOLDER_BANNER; }}
                     />
                 )}
                 <div className={styles.bannerOverlay} />
@@ -48,6 +49,7 @@ export default function StoreDetail() {
                                 src={store?.logoUrl || PLACEHOLDER_LOGO}
                                 alt={`${store?.name} logo`}
                                 className={styles.logo}
+                                onError={(e) => { e.target.src = PLACEHOLDER_LOGO; }}
                             />
                         )}
                     </div>
@@ -117,8 +119,18 @@ export default function StoreDetail() {
 }
 
 function PinIcon() {
-    return <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>;
+    return (
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+            <circle cx="12" cy="10" r="3"/>
+        </svg>
+    );
 }
+
 function PhoneIcon() {
-    return <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13 19.79 19.79 0 0 1 1.62 4.38 2 2 0 0 1 3.6 2.18h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 9.91a16 16 0 0 0 6.06 6.06l.82-.82a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21.72 17z"/></svg>;
+    return (
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13 19.79 19.79 0 0 1 1.62 4.38 2 2 0 0 1 3.6 2.18h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 9.91a16 16 0 0 0 6.06 6.06l.82-.82a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21.72 17z"/>
+        </svg>
+    );
 }
