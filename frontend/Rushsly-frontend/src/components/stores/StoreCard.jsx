@@ -19,8 +19,8 @@ export default function StoreCard({ store }) {
                 />
                 <div className={styles.overlay} />
                 <span className={store.isOpen ? styles.badgeOpen : styles.badgeClosed}>
-          {store.isOpen ? "Abierto" : "Cerrado"}
-        </span>
+                    {store.isOpen ? "Open" : "Closed"}
+                </span>
             </div>
 
             <div className={styles.body}>
@@ -28,7 +28,7 @@ export default function StoreCard({ store }) {
                     <div className={styles.logoWrap}>
                         <img
                             src={store.logoUrl || PLACEHOLDER_LOGO}
-                            alt={`Logo ${store.name}`}
+                            alt={`${store.name} logo`}
                             className={styles.logo}
                             onError={(e) => { e.target.src = PLACEHOLDER_LOGO; }}
                         />
@@ -36,9 +36,7 @@ export default function StoreCard({ store }) {
                     <div className={styles.nameGroup}>
                         <h3 className={styles.name}>{store.name}</h3>
                         {categoryInfo && (
-                            <span className={styles.category}>
-                {categoryInfo.emoji} {categoryInfo.label}
-              </span>
+                            <span className={styles.category}>{categoryInfo.label}</span>
                         )}
                     </div>
                 </div>
@@ -49,15 +47,20 @@ export default function StoreCard({ store }) {
 
                 {store.city && (
                     <span className={styles.city}>
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="none"
-                 stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
-              <circle cx="12" cy="10" r="3"/>
-            </svg>
+                        <PinIcon />
                         {store.city}
-          </span>
+                    </span>
                 )}
             </div>
         </Link>
+    );
+}
+
+function PinIcon() {
+    return (
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+            <circle cx="12" cy="10" r="3" />
+        </svg>
     );
 }

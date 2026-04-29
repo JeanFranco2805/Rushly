@@ -18,7 +18,6 @@ export default function Home() {
 
     return (
         <div className={styles.page}>
-            {/* Hero */}
             <section className={styles.hero}>
                 <div className={styles.heroInner}>
                     <div className={styles.heroBadge}>
@@ -68,7 +67,6 @@ export default function Home() {
                 </div>
             </section>
 
-            {/* Category pills */}
             <section className={styles.categoriesSection}>
                 <div className="container">
                     <h2 className={styles.sectionTitle}>Browse by category</h2>
@@ -77,7 +75,6 @@ export default function Home() {
                             className={[styles.catPill, !activeCategory ? styles.catActive : ""].join(" ")}
                             onClick={() => setActiveCategory(null)}
                         >
-                            <span className={styles.catEmoji}>🏪</span>
                             All stores
                         </button>
                         {STORE_CATEGORIES.map((cat) => (
@@ -86,7 +83,6 @@ export default function Home() {
                                 className={[styles.catPill, activeCategory === cat.value ? styles.catActive : ""].join(" ")}
                                 onClick={() => setActiveCategory(activeCategory === cat.value ? null : cat.value)}
                             >
-                                <span className={styles.catEmoji}>{cat.emoji}</span>
                                 {cat.label}
                             </button>
                         ))}
@@ -94,7 +90,6 @@ export default function Home() {
                 </div>
             </section>
 
-            {/* Stores grid */}
             <section className={styles.storesSection}>
                 <div className="container">
                     <div className={styles.storesHeader}>
@@ -104,8 +99,8 @@ export default function Home() {
                                 : "All stores"}
                         </h2>
                         <span className={styles.storeCount}>
-              {!loading && `${displayStores.length} stores`}
-            </span>
+                            {!loading && `${displayStores.length} stores`}
+                        </span>
                     </div>
 
                     {loading ? (
@@ -129,7 +124,6 @@ export default function Home() {
                 </div>
             </section>
 
-            {/* Sell CTA */}
             <section className={styles.sellerCta}>
                 <div className="container">
                     <div className={styles.ctaCard}>
@@ -140,13 +134,13 @@ export default function Home() {
                                 and reach customers in your city.
                             </p>
                             <Link to={ROUTES.SELLER} className={styles.ctaBtn}>
-                                Open your store →
+                                Open your store
                             </Link>
                         </div>
                         <div className={styles.ctaIllustration}>
                             <div className={styles.ctaShape1} />
                             <div className={styles.ctaShape2} />
-                            <span className={styles.ctaEmoji}>🏪</span>
+                            <CtaIllustrationIcon />
                         </div>
                     </div>
                 </div>
@@ -170,9 +164,17 @@ function StoreCardSkeleton() {
 
 function SearchIcon() {
     return (
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
-             stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
             <circle cx="11" cy="11" r="8" /><path d="m21 21-4.35-4.35" />
+        </svg>
+    );
+}
+
+function CtaIllustrationIcon() {
+    return (
+        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" style={{ color: "var(--color-accent)", position: "relative", zIndex: 1 }}>
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+            <polyline points="9 22 9 12 15 12 15 22" />
         </svg>
     );
 }

@@ -3,7 +3,6 @@
     min-height: calc(100vh - var(--header-height));
 }
 
-/* ── Guest ───────────────────────────────── */
 .guestPage {
     display: flex;
     align-items: center;
@@ -23,17 +22,13 @@
     flex-direction: column;
     align-items: center;
     gap: var(--space-4);
-}
-
-.guestIcon {
-    font-size: 3rem;
-    display: block;
-    margin-bottom: var(--space-2);
+    color: var(--color-text-muted);
 }
 
 .guestCard h2 {
     font-family: var(--font-display);
     font-size: var(--text-2xl);
+    color: var(--color-text-primary);
 }
 
 .guestCard p {
@@ -59,7 +54,6 @@
     background: var(--color-accent-dim);
 }
 
-/* ── Sidebar ─────────────────────────────── */
 .sidebar {
     width: var(--sidebar-width);
     min-height: 100%;
@@ -115,13 +109,14 @@
 }
 
 .tabIcon {
-    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     width: 20px;
-    text-align: center;
     flex-shrink: 0;
+    color: inherit;
 }
 
-/* ── Content area ────────────────────────── */
 .content {
     flex: 1;
     padding: var(--space-8);
@@ -129,7 +124,6 @@
     min-width: 0;
 }
 
-/* ── Tab wrapper ─────────────────────────── */
 .tab {
     display: flex;
     flex-direction: column;
@@ -162,7 +156,6 @@
     flex-shrink: 0;
 }
 
-/* ── No store ────────────────────────────── */
 .noStore {
     display: flex;
     flex-direction: column;
@@ -174,11 +167,13 @@
     background: var(--color-bg-elevated);
     border: 1px solid var(--color-border-subtle);
     border-radius: var(--radius-xl);
+    color: var(--color-text-muted);
 }
 
 .noStore h3 {
     font-family: var(--font-display);
     font-size: var(--text-xl);
+    color: var(--color-text-secondary);
 }
 
 .noStore p {
@@ -186,12 +181,6 @@
     color: var(--color-text-secondary);
 }
 
-.noStoreIcon {
-    font-size: 3rem;
-    display: block;
-}
-
-/* ── Stats grid ──────────────────────────── */
 .statsGrid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
@@ -231,7 +220,6 @@
     font-size: var(--text-lg);
 }
 
-/* ── Store preview ───────────────────────── */
 .storePreview {
     background: var(--color-bg-elevated);
     border: 1px solid var(--color-border-subtle);
@@ -298,7 +286,6 @@
     color: var(--color-text-muted);
 }
 
-/* ── Forms ───────────────────────────────── */
 .formSection {
     background: var(--color-bg-elevated);
     border: 1px solid var(--color-border-subtle);
@@ -385,7 +372,6 @@
     border-radius: var(--radius-md);
 }
 
-/* ── Product table ───────────────────────── */
 .productTable {
     background: var(--color-bg-elevated);
     border: 1px solid var(--color-border-subtle);
@@ -431,6 +417,10 @@
     text-align: center;
     color: var(--color-text-muted);
     font-size: var(--text-sm);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-3);
 }
 
 .productCell {
@@ -522,7 +512,6 @@
     border-color: var(--color-error);
 }
 
-/* ── Stock edit ──────────────────────────── */
 .stockEdit {
     display: flex;
     align-items: center;
@@ -568,7 +557,6 @@
     cursor: pointer;
 }
 
-/* ── Payment methods ─────────────────────── */
 .paymentList {
     display: flex;
     flex-direction: column;
@@ -611,19 +599,12 @@
     color: var(--color-accent);
 }
 
-/* ── Animations ──────────────────────────── */
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(8px); }
     to   { opacity: 1; transform: translateY(0); }
 }
 
-/* ── Responsive ──────────────────────────── */
 @media (max-width: 768px) {
-    .sidebar {
-        display: none;
-    }
-
-    .formGrid {
-        grid-template-columns: 1fr;
-    }
+    .sidebar { display: none; }
+    .formGrid { grid-template-columns: 1fr; }
 }

@@ -19,9 +19,9 @@ export default function SellerDashboard() {
         return (
             <div className={styles.guestPage}>
                 <div className={styles.guestCard}>
-                    <span className={styles.guestIcon}>🏪</span>
-                    <h2>Sign in to manage your store</h2>
-                    <p>Create and manage your store, products, and orders.</p>
+                    <StoreIcon size={40} />
+                    <h2>Manage your store</h2>
+                    <p>Sign in to create and manage your store, products and orders.</p>
                     <Link to="/profile" className={styles.signInBtn}>Sign in</Link>
                 </div>
             </div>
@@ -31,9 +31,7 @@ export default function SellerDashboard() {
     return (
         <div className={styles.page}>
             <div className={styles.sidebar}>
-                <div className={styles.sidebarBrand}>
-                    <span>Seller Hub</span>
-                </div>
+                <div className={styles.sidebarBrand}>Seller Hub</div>
                 {TABS.map((tab) => (
                     <button
                         key={tab.id}
@@ -47,28 +45,27 @@ export default function SellerDashboard() {
             </div>
 
             <div className={styles.content}>
-                {activeTab === "overview"  && <OverviewTab user={user} />}
+                {activeTab === "overview"  && <OverviewTab user={user} setActiveTab={setActiveTab} />}
                 {activeTab === "store"     && <StoreTab user={user} />}
                 {activeTab === "products"  && <ProductsTab user={user} />}
                 {activeTab === "inventory" && <InventoryTab user={user} />}
                 {activeTab === "payments"  && <PaymentsTab user={user} />}
-                {activeTab === "orders"    && <SellerOrdersTab user={user} />}
+                {activeTab === "orders"    && <SellerOrdersTab />}
             </div>
         </div>
     );
 }
 
 const TABS = [
-    { id: "overview",  label: "Overview",       icon: "📊" },
-    { id: "store",     label: "My Store",        icon: "🏪" },
-    { id: "products",  label: "Products",        icon: "📦" },
-    { id: "inventory", label: "Inventory",       icon: "🗂️" },
-    { id: "payments",  label: "Payment Methods", icon: "💳" },
-    { id: "orders",    label: "Orders",          icon: "📋" },
+    { id: "overview",  label: "Overview",        icon: <OverviewIcon /> },
+    { id: "store",     label: "My Store",         icon: <StoreIcon /> },
+    { id: "products",  label: "Products",         icon: <BoxIcon /> },
+    { id: "inventory", label: "Inventory",        icon: <LayersIcon /> },
+    { id: "payments",  label: "Payment Methods",  icon: <CardIcon /> },
+    { id: "orders",    label: "Orders",           icon: <OrdersIcon /> },
 ];
 
-// ─── Overview ────────────────────────────────────────────────────────────────
-function OverviewTab({ user }) {
+function OverviewTab({ user, setActiveTab }) {
     const { stores, loading } = useMyStores(user?.id);
 
     if (loading) return <Loader center />;
@@ -77,15 +74,17 @@ function OverviewTab({ user }) {
 
     return (
         <div className={styles.tab}>
-            <h1 className={styles.tabTitle}>Welcome back, {user.name?.split(" ")[0]} 👋</h1>
-            <p className={styles.tabSubtitle}>Here's a summary of your store.</p>
+            <div>
+                <h1 className={styles.tabTitle}>Welcome back, {user.name?.split(" ")[0]}</h1>
+                <p className={styles.tabSubtitle}>Here is a summary of your store activity.</p>
+            </div>
 
             {!store ? (
                 <div className={styles.noStore}>
-                    <span className={styles.noStoreIcon}>🏪</span>
-                    <h3>You don't have a store yet</h3>
+                    <StoreIcon size={36} />
+                    <h3>No store yet</h3>
                     <p>Create your store to start selling your products.</p>
-                    <Button onClick={() => {}}>Create store</Button>
+                    <Button onClick={() => setActiveTab("store")}>Create store</Button>
                 </div>
             ) : (
                 <div className={styles.statsGrid}>
@@ -104,13 +103,12 @@ function StatCard({ label, value, accent, mono }) {
         <div className={styles.statCard}>
             <span className={styles.statLabel}>{label}</span>
             <span className={[styles.statValue, accent ? styles.accentValue : "", mono ? styles.monoValue : ""].join(" ")}>
-        {value}
-      </span>
+                {value}
+            </span>
         </div>
     );
 }
 
-// ─── Store ────────────────────────────────────────────────────────────────────
 function StoreTab({ user }) {
     const { stores, loading, refetch } = useMyStores(user?.id);
     const [mode, setMode] = useState("view");
@@ -119,15 +117,21 @@ function StoreTab({ user }) {
 
     const store = stores[0];
 
-    const [form, setForm] = useState({
+    const emptyForm = {
         name: "", description: "", logoUrl: "", bannerUrl: "",
         phone: "", email: "", address: "", city: "", country: "",
         category: "OTHER",
-    });
+    };
+
+    const [form, setForm] = useState(emptyForm);
 
     const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }));
 
     const handleCreate = async () => {
+        if (!form.name.trim()) {
+            setError("Store name is required.");
+            return;
+        }
         setSaving(true);
         setError(null);
         try {
@@ -142,6 +146,10 @@ function StoreTab({ user }) {
     };
 
     const handleUpdate = async () => {
+        if (!form.name.trim()) {
+            setError("Store name is required.");
+            return;
+        }
         setSaving(true);
         setError(null);
         try {
@@ -169,8 +177,12 @@ function StoreTab({ user }) {
                 address: store.address || "", city: store.city || "",
                 country: store.country || "", category: store.category || "OTHER",
             });
+            setMode("edit");
+        } else {
+            setForm(emptyForm);
+            setMode("create");
         }
-        setMode(store ? "edit" : "create");
+        setError(null);
     };
 
     if (loading) return <Loader center />;
@@ -180,7 +192,7 @@ function StoreTab({ user }) {
             <div className={styles.tabHeader}>
                 <div>
                     <h2 className={styles.tabTitle}>My Store</h2>
-                    <p className={styles.tabSubtitle}>Manage your store settings.</p>
+                    <p className={styles.tabSubtitle}>Manage your store settings and information.</p>
                 </div>
                 {store && mode === "view" && (
                     <div className={styles.headerActions}>
@@ -194,7 +206,7 @@ function StoreTab({ user }) {
 
             {mode === "view" && !store && (
                 <div className={styles.noStore}>
-                    <span className={styles.noStoreIcon}>🏪</span>
+                    <StoreIcon size={36} />
                     <h3>No store yet</h3>
                     <p>Create your store to start selling.</p>
                     <Button onClick={startEdit}>Create store</Button>
@@ -203,20 +215,22 @@ function StoreTab({ user }) {
 
             {mode === "view" && store && (
                 <div className={styles.storePreview}>
-                    <div className={styles.previewBanner}
-                         style={{ backgroundImage: store.bannerUrl ? `url(${store.bannerUrl})` : undefined }} />
+                    <div
+                        className={styles.previewBanner}
+                        style={{ backgroundImage: store.bannerUrl ? `url(${store.bannerUrl})` : undefined }}
+                    />
                     <div className={styles.previewBody}>
                         <div className={styles.previewInfo}>
                             <h3 className={styles.previewName}>{store.name}</h3>
                             <span className={[styles.statusDot, store.isOpen ? styles.openDot : styles.closedDot].join(" ")}>
-                {store.isOpen ? "● Open" : "● Closed"}
-              </span>
+                                {store.isOpen ? "Open" : "Closed"}
+                            </span>
                         </div>
-                        <p className={styles.previewDesc}>{store.description}</p>
+                        {store.description && <p className={styles.previewDesc}>{store.description}</p>}
                         <div className={styles.previewMeta}>
                             {store.category && <span>{STORE_CATEGORIES.find(c => c.value === store.category)?.label}</span>}
-                            {store.city && <span>📍 {store.city}</span>}
-                            {store.phone && <span>📞 {store.phone}</span>}
+                            {store.city && <span>{store.city}</span>}
+                            {store.phone && <span>{store.phone}</span>}
                         </div>
                     </div>
                 </div>
@@ -226,24 +240,29 @@ function StoreTab({ user }) {
                 <div className={styles.formSection}>
                     <h3 className={styles.formTitle}>{mode === "create" ? "Create your store" : "Edit store"}</h3>
                     <div className={styles.formGrid}>
-                        <Input label="Store name *" value={form.name} onChange={set("name")} placeholder="My Awesome Store" />
+                        <Input label="Store name *" value={form.name} onChange={set("name")} placeholder="My Store" />
                         <Input label="Email" type="email" value={form.email} onChange={set("email")} placeholder="store@email.com" />
                         <div className={styles.fullWidth}>
                             <label className={styles.fieldLabel}>Description</label>
-                            <textarea className={styles.textarea} rows={3} value={form.description}
-                                      onChange={set("description")} placeholder="Tell customers about your store..." />
+                            <textarea
+                                className={styles.textarea}
+                                rows={3}
+                                value={form.description}
+                                onChange={set("description")}
+                                placeholder="Tell customers about your store..."
+                            />
                         </div>
-                        <div className={styles.fullWidth}>
+                        <div>
                             <label className={styles.fieldLabel}>Category</label>
                             <select className={styles.select} value={form.category} onChange={set("category")}>
                                 {STORE_CATEGORIES.map((c) => (
-                                    <option key={c.value} value={c.value}>{c.emoji} {c.label}</option>
+                                    <option key={c.value} value={c.value}>{c.label}</option>
                                 ))}
                             </select>
                         </div>
+                        <Input label="Phone" value={form.phone} onChange={set("phone")} placeholder="+1 234 567 8900" />
                         <Input label="Logo URL" value={form.logoUrl} onChange={set("logoUrl")} placeholder="https://..." />
                         <Input label="Banner URL" value={form.bannerUrl} onChange={set("bannerUrl")} placeholder="https://..." />
-                        <Input label="Phone" value={form.phone} onChange={set("phone")} placeholder="+1 234 567 8900" />
                         <Input label="Address" value={form.address} onChange={set("address")} placeholder="123 Main St" />
                         <Input label="City" value={form.city} onChange={set("city")} placeholder="New York" />
                         <Input label="Country" value={form.country} onChange={set("country")} placeholder="United States" />
@@ -253,7 +272,7 @@ function StoreTab({ user }) {
                         <Button loading={saving} onClick={mode === "create" ? handleCreate : handleUpdate}>
                             {mode === "create" ? "Create store" : "Save changes"}
                         </Button>
-                        <Button variant="ghost" onClick={() => setMode("view")}>Cancel</Button>
+                        <Button variant="ghost" onClick={() => { setMode("view"); setError(null); }}>Cancel</Button>
                     </div>
                 </div>
             )}
@@ -261,7 +280,6 @@ function StoreTab({ user }) {
     );
 }
 
-// ─── Products ─────────────────────────────────────────────────────────────────
 function ProductsTab({ user }) {
     const { stores } = useMyStores(user?.id);
     const store = stores[0];
@@ -272,14 +290,14 @@ function ProductsTab({ user }) {
 
     const [form, setForm] = useState({
         name: "", description: "", price: "", imageUrl: "",
-        brand: "", stock: "100",
-        category: { name: "Other" },
+        brand: "", stock: "100", category: { name: "Other" },
     });
 
     const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }));
 
     const handleCreate = async () => {
         if (!store) { setError("Create a store first."); return; }
+        if (!form.name.trim() || !form.price) { setError("Name and price are required."); return; }
         setSaving(true);
         setError(null);
         try {
@@ -314,7 +332,12 @@ function ProductsTab({ user }) {
         await refetch();
     };
 
-    if (!store) return <div className={styles.noStore}><span className={styles.noStoreIcon}>🏪</span><h3>Create a store first</h3></div>;
+    if (!store) return (
+        <div className={styles.noStore}>
+            <StoreIcon size={36} />
+            <h3>Create a store first</h3>
+        </div>
+    );
     if (loading) return <Loader center />;
 
     return (
@@ -347,7 +370,7 @@ function ProductsTab({ user }) {
                     {error && <p className={styles.errorMsg}>{error}</p>}
                     <div className={styles.formActions}>
                         <Button loading={saving} onClick={handleCreate}>Add product</Button>
-                        <Button variant="ghost" onClick={() => setMode("list")}>Cancel</Button>
+                        <Button variant="ghost" onClick={() => { setMode("list"); setError(null); }}>Cancel</Button>
                     </div>
                 </div>
             )}
@@ -356,7 +379,8 @@ function ProductsTab({ user }) {
                 <div className={styles.productTable}>
                     {products.length === 0 ? (
                         <div className={styles.emptyTable}>
-                            <p>No products yet. Add your first product!</p>
+                            <BoxIcon size={32} />
+                            <p>No products yet. Add your first product.</p>
                         </div>
                     ) : (
                         <table className={styles.table}>
@@ -374,8 +398,12 @@ function ProductsTab({ user }) {
                                 <tr key={p.id}>
                                     <td>
                                         <div className={styles.productCell}>
-                                            <img src={p.imageUrl} alt={p.name} className={styles.productThumb}
-                                                 onError={(e) => { e.target.src = "https://placehold.co/40x40/181818/888?text=?"; }} />
+                                            <img
+                                                src={p.imageUrl}
+                                                alt={p.name}
+                                                className={styles.productThumb}
+                                                onError={(e) => { e.target.src = "https://placehold.co/40x40/181818/888?text=?"; }}
+                                            />
                                             <div>
                                                 <span className={styles.productName}>{p.name}</span>
                                                 <span className={styles.productBrand}>{p.brand}</span>
@@ -385,17 +413,16 @@ function ProductsTab({ user }) {
                                     <td className={styles.priceCell}>${p.price?.toFixed(2)}</td>
                                     <td className={styles.stockCell}>{p.stock ?? "—"}</td>
                                     <td>
-                      <span className={[styles.activeBadge, p.active !== false ? styles.activeOn : styles.activeOff].join(" ")}>
-                        {p.active !== false ? "Active" : "Inactive"}
-                      </span>
+                                            <span className={[styles.activeBadge, p.active !== false ? styles.activeOn : styles.activeOff].join(" ")}>
+                                                {p.active !== false ? "Active" : "Inactive"}
+                                            </span>
                                     </td>
                                     <td>
                                         <div className={styles.rowActions}>
                                             <button className={styles.rowBtn} onClick={() => handleToggle(p.id)}>
                                                 {p.active !== false ? "Deactivate" : "Activate"}
                                             </button>
-                                            <button className={[styles.rowBtn, styles.rowBtnDanger].join(" ")}
-                                                    onClick={() => handleDelete(p.id)}>
+                                            <button className={[styles.rowBtn, styles.rowBtnDanger].join(" ")} onClick={() => handleDelete(p.id)}>
                                                 Delete
                                             </button>
                                         </div>
@@ -411,7 +438,6 @@ function ProductsTab({ user }) {
     );
 }
 
-// ─── Inventory ────────────────────────────────────────────────────────────────
 function InventoryTab({ user }) {
     const { stores } = useMyStores(user?.id);
     const store = stores[0];
@@ -425,7 +451,12 @@ function InventoryTab({ user }) {
         setEditingId(null);
     };
 
-    if (!store) return <div className={styles.noStore}><span className={styles.noStoreIcon}>🏪</span><h3>Create a store first</h3></div>;
+    if (!store) return (
+        <div className={styles.noStore}>
+            <StoreIcon size={36} />
+            <h3>Create a store first</h3>
+        </div>
+    );
     if (loading) return <Loader center />;
 
     const lowStock = products.filter((p) => (p.stock ?? 100) < 10);
@@ -436,9 +467,9 @@ function InventoryTab({ user }) {
             <h2 className={styles.tabTitle}>Inventory</h2>
             <p className={styles.tabSubtitle}>Manage stock levels for your products.</p>
 
-            <div className={styles.statsGrid} style={{ marginBottom: "var(--space-8)" }}>
+            <div className={styles.statsGrid}>
                 <StatCard label="Total products" value={products.length.toString()} />
-                <StatCard label="Low stock (< 10)" value={lowStock.length.toString()} />
+                <StatCard label="Low stock" value={lowStock.length.toString()} />
                 <StatCard label="Out of stock" value={outOfStock.length.toString()} />
             </div>
 
@@ -459,32 +490,40 @@ function InventoryTab({ user }) {
                             <tr key={p.id}>
                                 <td>
                                     <div className={styles.productCell}>
-                                        <img src={p.imageUrl} alt={p.name} className={styles.productThumb}
-                                             onError={(e) => { e.target.src = "https://placehold.co/40x40/181818/888?text=?"; }} />
+                                        <img
+                                            src={p.imageUrl}
+                                            alt={p.name}
+                                            className={styles.productThumb}
+                                            onError={(e) => { e.target.src = "https://placehold.co/40x40/181818/888?text=?"; }}
+                                        />
                                         <span className={styles.productName}>{p.name}</span>
                                     </div>
                                 </td>
                                 <td className={styles.stockCell}>
-                    <span className={[styles.stockNum, stock === 0 ? styles.stockOut : stock < 10 ? styles.stockLow : styles.stockOk].join(" ")}>
-                      {stock}
-                    </span>
+                                        <span className={[styles.stockNum, stock === 0 ? styles.stockOut : stock < 10 ? styles.stockLow : styles.stockOk].join(" ")}>
+                                            {stock}
+                                        </span>
                                 </td>
                                 <td>
-                    <span className={[styles.activeBadge, stock > 0 ? styles.activeOn : styles.activeOff].join(" ")}>
-                      {stock > 0 ? "In stock" : "Out of stock"}
-                    </span>
+                                        <span className={[styles.activeBadge, stock > 0 ? styles.activeOn : styles.activeOff].join(" ")}>
+                                            {stock > 0 ? "In stock" : "Out of stock"}
+                                        </span>
                                 </td>
                                 <td>
                                     {editingId === p.id ? (
                                         <div className={styles.stockEdit}>
-                                            <input className={styles.stockInput} type="number" value={stockValue}
-                                                   onChange={(e) => setStockValue(e.target.value)} autoFocus />
+                                            <input
+                                                className={styles.stockInput}
+                                                type="number"
+                                                value={stockValue}
+                                                onChange={(e) => setStockValue(e.target.value)}
+                                                autoFocus
+                                            />
                                             <button className={styles.saveBtn} onClick={() => handleSaveStock(p.id)}>Save</button>
-                                            <button className={styles.cancelBtn} onClick={() => setEditingId(null)}>✕</button>
+                                            <button className={styles.cancelBtn} onClick={() => setEditingId(null)}>Cancel</button>
                                         </div>
                                     ) : (
-                                        <button className={styles.rowBtn}
-                                                onClick={() => { setEditingId(p.id); setStockValue(String(stock)); }}>
+                                        <button className={styles.rowBtn} onClick={() => { setEditingId(p.id); setStockValue(String(stock)); }}>
                                             Update
                                         </button>
                                     )}
@@ -499,16 +538,14 @@ function InventoryTab({ user }) {
     );
 }
 
-// ─── Payment methods ──────────────────────────────────────────────────────────
 function PaymentsTab({ user }) {
-    const { stores, refetch: refetchStores } = useMyStores(user?.id);
+    const { stores } = useMyStores(user?.id);
     const store = stores[0];
     const [paymentMethods, setPaymentMethods] = useState([]);
     const [adding, setAdding] = useState(false);
     const [saving, setSaving] = useState(false);
     const [form, setForm] = useState({ type: "CREDIT_CARD", details: "", isDefault: false });
 
-    // Load payment methods when store is available
     useState(() => {
         if (store?.id) {
             storesApi.getPaymentMethods(store.id).then(setPaymentMethods).catch(() => {});
@@ -535,7 +572,12 @@ function PaymentsTab({ user }) {
         setPaymentMethods((prev) => prev.filter((p) => p.id !== id));
     };
 
-    if (!store) return <div className={styles.noStore}><span className={styles.noStoreIcon}>🏪</span><h3>Create a store first</h3></div>;
+    if (!store) return (
+        <div className={styles.noStore}>
+            <StoreIcon size={36} />
+            <h3>Create a store first</h3>
+        </div>
+    );
 
     return (
         <div className={styles.tab}>
@@ -555,16 +597,18 @@ function PaymentsTab({ user }) {
                     <div className={styles.formGrid}>
                         <div>
                             <label className={styles.fieldLabel}>Payment type</label>
-                            <select className={styles.select} value={form.type}
-                                    onChange={(e) => setForm(f => ({ ...f, type: e.target.value }))}>
+                            <select className={styles.select} value={form.type} onChange={(e) => setForm(f => ({ ...f, type: e.target.value }))}>
                                 {PAYMENT_TYPES.map((pt) => (
                                     <option key={pt.value} value={pt.value}>{pt.label}</option>
                                 ))}
                             </select>
                         </div>
-                        <Input label="Details (optional)" value={form.details}
-                               onChange={(e) => setForm(f => ({ ...f, details: e.target.value }))}
-                               placeholder="e.g. account name, last 4 digits" />
+                        <Input
+                            label="Details (optional)"
+                            value={form.details}
+                            onChange={(e) => setForm(f => ({ ...f, details: e.target.value }))}
+                            placeholder="e.g. account name, last 4 digits"
+                        />
                     </div>
                     <div className={styles.formActions}>
                         <Button loading={saving} onClick={handleAdd}>Add method</Button>
@@ -575,19 +619,21 @@ function PaymentsTab({ user }) {
 
             <div className={styles.paymentList}>
                 {paymentMethods.length === 0 ? (
-                    <div className={styles.emptyTable}><p>No payment methods configured yet.</p></div>
+                    <div className={styles.emptyTable}>
+                        <CardIcon size={32} />
+                        <p>No payment methods configured yet.</p>
+                    </div>
                 ) : (
                     paymentMethods.map((pm) => (
                         <div key={pm.id} className={styles.paymentCard}>
                             <div className={styles.paymentInfo}>
-                <span className={styles.paymentType}>
-                  {PAYMENT_TYPES.find((p) => p.value === pm.type)?.label || pm.type}
-                </span>
+                                <span className={styles.paymentType}>
+                                    {PAYMENT_TYPES.find((p) => p.value === pm.type)?.label || pm.type}
+                                </span>
                                 {pm.details && <span className={styles.paymentDetails}>{pm.details}</span>}
                                 {pm.isDefault && <span className={styles.defaultBadge}>Default</span>}
                             </div>
-                            <button className={[styles.rowBtn, styles.rowBtnDanger].join(" ")}
-                                    onClick={() => handleDelete(pm.id)}>
+                            <button className={[styles.rowBtn, styles.rowBtnDanger].join(" ")} onClick={() => handleDelete(pm.id)}>
                                 Remove
                             </button>
                         </div>
@@ -598,15 +644,69 @@ function PaymentsTab({ user }) {
     );
 }
 
-// ─── Seller orders ────────────────────────────────────────────────────────────
-function SellerOrdersTab({ user }) {
+function SellerOrdersTab() {
     return (
         <div className={styles.tab}>
             <h2 className={styles.tabTitle}>Orders</h2>
             <p className={styles.tabSubtitle}>View and manage orders placed in your store.</p>
             <div className={styles.emptyTable}>
-                <p>Order management coming soon. Orders placed via your store will appear here.</p>
+                <OrdersIcon size={32} />
+                <p>Order management coming soon.</p>
             </div>
         </div>
+    );
+}
+
+function OverviewIcon({ size = 16 }) {
+    return (
+        <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+            <rect x="3" y="3" width="7" height="7" /><rect x="14" y="3" width="7" height="7" />
+            <rect x="14" y="14" width="7" height="7" /><rect x="3" y="14" width="7" height="7" />
+        </svg>
+    );
+}
+
+function StoreIcon({ size = 16 }) {
+    return (
+        <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+            <polyline points="9 22 9 12 15 12 15 22" />
+        </svg>
+    );
+}
+
+function BoxIcon({ size = 16 }) {
+    return (
+        <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+        </svg>
+    );
+}
+
+function LayersIcon({ size = 16 }) {
+    return (
+        <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+            <polygon points="12 2 2 7 12 12 22 7 12 2" />
+            <polyline points="2 17 12 22 22 17" />
+            <polyline points="2 12 12 17 22 12" />
+        </svg>
+    );
+}
+
+function CardIcon({ size = 16 }) {
+    return (
+        <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+            <rect x="1" y="4" width="22" height="16" rx="2" ry="2" />
+            <line x1="1" y1="10" x2="23" y2="10" />
+        </svg>
+    );
+}
+
+function OrdersIcon({ size = 16 }) {
+    return (
+        <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+            <line x1="8" y1="6" x2="21" y2="6" /><line x1="8" y1="12" x2="21" y2="12" /><line x1="8" y1="18" x2="21" y2="18" />
+            <line x1="3" y1="6" x2="3.01" y2="6" /><line x1="3" y1="12" x2="3.01" y2="12" /><line x1="3" y1="18" x2="3.01" y2="18" />
+        </svg>
     );
 }
