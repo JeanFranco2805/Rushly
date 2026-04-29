@@ -9,6 +9,13 @@ import java.util.List;
 
 @Component
 public class UserMapper {
+
+    private final AddressMapper addressMapper;
+
+    public UserMapper(AddressMapper addressMapper) {
+        this.addressMapper = addressMapper;
+    }
+
     public UserDTO toDTO(String name, String email, String password, String phone, AddressDTO addressDTO) {
         return new UserDTO(name, email, password, phone, addressDTO);
     }
@@ -19,7 +26,9 @@ public class UserMapper {
         user.setEmail(userDTO.getEmail());
         user.setPassword(userDTO.getPassword());
         user.setPhone(userDTO.getPhone());
-        user.setAddress(new AddressMapper().toEntity(userDTO.getAddress()));
+        if (userDTO.getAddress() != null) {
+            user.setAddress(addressMapper.toEntity(userDTO.getAddress()));
+        }
         return user;
     }
 
@@ -30,7 +39,7 @@ public class UserMapper {
                         user.getEmail(),
                         user.getPassword(),
                         user.getPhone(),
-                        new AddressMapper().toDTO(user.getAddress())
+                        user.getAddress() != null ? addressMapper.toDTO(user.getAddress()) : null
                 ))
                 .toList();
     }
@@ -41,4 +50,3 @@ public class UserMapper {
                 .toList();
     }
 }
-

@@ -8,14 +8,18 @@ import com.thefive40.net.userservice.model.UserDTO;
 import com.thefive40.net.userservice.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 
 @Service
 public class UserService {
+
     @Autowired
     private UserRepository repository;
+
     @Autowired
     private AddressMapper addressMapper;
+
     @Autowired
     private UserMapper mapper;
 
@@ -25,11 +29,15 @@ public class UserService {
 
     public UserDTO findById(Long id) {
         var user = repository.findById(id).orElseThrow();
-        return mapper.toDTO(user.getName(), user.getEmail(), user.getPassword(), user.getPhone(), addressMapper.toDTO(user.getAddress()));
+        AddressDTO addressDTO = user.getAddress() != null
+                ? addressMapper.toDTO(user.getAddress())
+                : null;
+        return mapper.toDTO(user.getName(), user.getEmail(), user.getPassword(), user.getPhone(), addressDTO);
     }
 
     public AddressDTO findAddressById(Long id) {
         var user = repository.findById(id).orElseThrow();
+        if (user.getAddress() == null) return null;
         return addressMapper.toDTO(user.getAddress());
     }
 
@@ -52,5 +60,4 @@ public class UserService {
     public void deleteAllUsers() {
         repository.deleteAll();
     }
-
 }

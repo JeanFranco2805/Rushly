@@ -6,7 +6,7 @@
         <groupId>com.thefive40.net</groupId>
         <artifactId>Rushly-back</artifactId>
         <version>0.0.1-SNAPSHOT</version>
-        <relativePath/>
+        <relativePath>../pom.xml</relativePath>
     </parent>
     <groupId>com.product-service</groupId>
     <artifactId>notification-service</artifactId>
@@ -15,7 +15,6 @@
     <description>notification-service</description>
     <properties>
         <java.version>21</java.version>
-        <spring-cloud.version>2025.1.1</spring-cloud.version>
     </properties>
     <dependencies>
         <dependency>
@@ -38,7 +37,6 @@
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-openfeign</artifactId>
         </dependency>
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
@@ -72,5 +70,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>

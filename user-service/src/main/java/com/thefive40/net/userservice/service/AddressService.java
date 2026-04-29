@@ -8,20 +8,25 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class AddressService {
+
     private final UserService userService;
     private final UserMapper userMapper;
-    private AddressRepository repository;
-    private AddressMapper mapper;
+    private final AddressRepository repository;
+    private final AddressMapper mapper;
 
-    public AddressService(AddressRepository repository, UserService userService, UserMapper userMapper) {
-        this.repository = repository;
+    public AddressService(AddressRepository repository,
+                          UserService userService,
+                          UserMapper userMapper,
+                          AddressMapper mapper) {
+        this.repository  = repository;
         this.userService = userService;
-        this.userMapper = userMapper;
+        this.userMapper  = userMapper;
+        this.mapper      = mapper;
     }
 
     public void createAddress(AddressDTO addressDTO, Long userId) {
         var address = mapper.toEntity(addressDTO);
-        var user = userMapper.toEntity(userService.findById(userId));
+        var user    = userMapper.toEntity(userService.findById(userId));
         address.setUser(user);
         user.setAddress(address);
         repository.save(address);
@@ -43,5 +48,4 @@ public class AddressService {
         var address = repository.findById(id).orElseThrow();
         return mapper.toDTO(address);
     }
-
 }
