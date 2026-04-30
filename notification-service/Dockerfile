@@ -13,12 +13,11 @@ COPY order-service/pom.xml        order-service/pom.xml
 COPY notification-service/pom.xml notification-service/pom.xml
 
 # 2. Pre-download deps (cached unless a pom.xml changes)
-RUN mvn dependency:go-offline -pl notification-service -am -DskipTests -q
-
+RUN mvn dependency:resolve dependency:resolve-plugins \
+    -pl notification-service -am -DskipTests -q
 # 3. Copy source and build
 COPY notification-service/src notification-service/src
-RUN mvn clean package -pl notification-service -am -DskipTests -q
-
+RUN mvn clean package -pl notification-service -am -Dmaven.test.skip=true -q
 FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
 COPY --from=build /app/notification-service/target/*.jar app.jar

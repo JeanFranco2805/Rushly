@@ -17,7 +17,7 @@ RUN mvn dependency:go-offline -pl eureka-server -am -DskipTests -q
 
 # 3. Copy source and build
 COPY eureka-server/src eureka-server/src
-RUN mvn clean package -pl eureka-server -am -DskipTests -q
+RUN mvn clean package -pl eureka-server -am -Dmaven.test.skip=true -q
 
 FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app

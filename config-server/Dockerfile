@@ -17,8 +17,7 @@ RUN mvn dependency:go-offline -pl config-server -am -DskipTests -q
 
 # 3. Copy source and build
 COPY config-server/src config-server/src
-RUN mvn clean package -pl config-server -am -DskipTests -q
-
+RUN mvn clean package -pl config-server -am -Dmaven.test.skip=true -q
 FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
 COPY --from=build /app/config-server/target/*.jar app.jar

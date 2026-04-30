@@ -17,7 +17,7 @@ RUN mvn dependency:go-offline -pl api-gateway -am -DskipTests -q
 
 # 3. Copy source and build
 COPY api-gateway/src api-gateway/src
-RUN mvn clean package -pl api-gateway -am -DskipTests -q
+RUN mvn clean package -pl api-gateway -am -Dmaven.test.skip=true -q
 
 FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app

@@ -9,9 +9,6 @@ volumes:
   mongo_data:
 
 services:
-
-  # ─── DATABASES ───────────────────────────────────────────────────────────────
-
   postgres:
     image: postgres:16-alpine
     container_name: rushly-postgres
